@@ -2,13 +2,15 @@ import React, { useState, Fragment } from "react";
 import {
   SafeAreaView,
   Dimensions,
+  TouchableWithoutFeedback,
   View,
   StyleSheet,
   Animated
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import * as shape from "d3-shape";
-import StaticTabbar, { tabHeight as height } from "./StaticTabbar";
+import ActiveTab, { tabHeight as height } from "./ActiveTab";
+import { Feather as Icons } from "@expo/vector-icons";
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
@@ -61,13 +63,37 @@ const tab = shape
 ]);
 
 const d = `${left}${tab}${right}`;
-
 export default function Tabbar() {
   translateX = new Animated.Value(-width);
+
+  values = tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0));
+
+  const slideBar = index => {
+    Animated.sequence([
+      ...values.map(translateX =>
+        Animated.timing(translateX, {
+          toValue: 0,
+          duration: 100,
+          userNativeDriver: true
+        })
+      ),
+      Animated.parallel([
+        Animated.spring(values[index], {
+          toValue: 1,
+          userNativeDriver: true
+        }),
+        Animated.spring(translateX, {
+          toValue: -width + tabWidth * index,
+          userNativeDriver: true
+        })
+      ])
+    ]).start();
+  };
 
   return (
     <Fragment>
       <View {...{ width, height }}>
+        <ActiveTab value={translateX} {...{ tabs }} />
         <AnimatedSvg
           width={width * 2.5}
           {...{ height }}
@@ -77,7 +103,29 @@ export default function Tabbar() {
         </AnimatedSvg>
 
         <View style={StyleSheet.absoluteFill}>
-          <StaticTabbar value={translateX} {...{ tabs }} />
+          <View style={styles.container}>
+            {tabs.map(({ name }, key) => {
+              const opacity = translateX.interpolate({
+                inputRange: [
+                  -width + tabWidth * (key - 1),
+                  -width + tabWidth * key,
+                  -width + tabWidth * (key + 1)
+                ],
+                outputRange: [1, 0, 1],
+                extrapolate: "clamp"
+              });
+              return (
+                <TouchableWithoutFeedback
+                  onPress={() => slideBar(key)}
+                  {...{ key }}
+                >
+                  <Animated.View style={[styles.tab, { opacity }]}>
+                    <Icons size={28} {...{ name }} color="grey" />
+                  </Animated.View>
+                </TouchableWithoutFeedback>
+              );
+            })}
+          </View>
         </View>
       </View>
       <SafeAreaView style={styles.SafeArea} />
@@ -88,5 +136,14 @@ export default function Tabbar() {
 const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: "white"
+  },
+  container: {
+    flexDirection: "row"
+  },
+  tab: {
+    flex: 1,
+    height: height,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
