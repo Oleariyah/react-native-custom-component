@@ -95,7 +95,7 @@ export default function Tabbar({ navigation }) {
   return (
     <Fragment>
       <View {...{ width, height }}>
-        <ActiveTab value={translateX} {...{ tabs }} />
+        <ActiveTab value={translateX} {...{ tabs, routes }} />
         <AnimatedSvg
           width={width * 2.5}
           {...{ height }}

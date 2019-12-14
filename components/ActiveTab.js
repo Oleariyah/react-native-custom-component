@@ -6,14 +6,14 @@ export const tabHeight = 64;
 const { width } = Dimensions.get("window");
 
 export default function ActiveTab(props) {
-  const { tabs, value } = props;
+  const { tabs, value, routes } = props;
   const tabWidth = width / tabs.length;
 
   values = tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0));
 
   return (
     <View style={styles.container}>
-      {tabs.map(({ name }, key) => {
+      {routes.map(({ routeName }, key) => {
         const activeValue = values[key];
 
         const tabOpacity = value.interpolate({
@@ -49,7 +49,7 @@ export default function ActiveTab(props) {
               ]}
             >
               <View style={styles.circle}>
-                <Icons size={30} {...{ name }} />
+                <Icons size={30} name={tabs[key][routeName]} />
               </View>
             </Animated.View>
           </Fragment>
