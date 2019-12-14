@@ -15,11 +15,11 @@ import { Feather as Icons } from "@expo/vector-icons";
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
 const tabs = [
-  { name: "grid" },
-  { name: "list" },
-  { name: "refresh-cw" },
-  { name: "box" },
-  { name: "user" }
+  { Home: "grid" },
+  { Dashboard: "list" },
+  { Detail: "refresh-cw" },
+  { Profile: "box" },
+  { Settings: "user" }
 ];
 //get screen width
 const { width } = Dimensions.get("window");
@@ -63,9 +63,11 @@ const tab = shape
 ]);
 
 const d = `${left}${tab}${right}`;
-export default function Tabbar() {
-  translateX = new Animated.Value(-width);
 
+export default function Tabbar({ navigation }) {
+  const { routes } = navigation.state;
+
+  translateX = new Animated.Value(-width);
   values = tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0));
 
   const slideBar = index => {
@@ -104,7 +106,7 @@ export default function Tabbar() {
 
         <View style={StyleSheet.absoluteFill}>
           <View style={styles.container}>
-            {tabs.map(({ name }, key) => {
+            {routes.map(({ routeName }, key) => {
               const opacity = translateX.interpolate({
                 inputRange: [
                   -width + tabWidth * (key - 1),
@@ -120,7 +122,7 @@ export default function Tabbar() {
                   {...{ key }}
                 >
                   <Animated.View style={[styles.tab, { opacity }]}>
-                    <Icons size={28} {...{ name }} color="grey" />
+                    <Icons size={28} name={tabs[key][routeName]} color="grey" />
                   </Animated.View>
                 </TouchableWithoutFeedback>
               );
