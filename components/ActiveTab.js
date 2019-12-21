@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { View, Dimensions, StyleSheet, Animated } from "react-native";
 import { Feather as Icons } from "@expo/vector-icons";
 
@@ -6,17 +6,15 @@ export const tabHeight = 64;
 const { width } = Dimensions.get("window");
 
 export default function ActiveTab(props) {
-  const { tabs, value, routes } = props;
+  const { tabs, translateX, values, routes } = props;
   const tabWidth = width / tabs.length;
-
-  values = tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0));
 
   return (
     <View style={styles.container}>
       {routes.map(({ routeName }, key) => {
         const activeValue = values[key];
 
-        const tabOpacity = value.interpolate({
+        const tabOpacity = translateX.interpolate({
           inputRange: [
             -width + tabWidth * (key - 1),
             -width + tabWidth * key,

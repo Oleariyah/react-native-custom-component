@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import {
   SafeAreaView,
   Dimensions,
@@ -64,11 +64,14 @@ const tab = shape
 
 const d = `${left}${tab}${right}`;
 
-export default function Tabbar({ navigation }) {
+export default function Tabbar(props) {
+  const { navigation } = props;
   const { routes } = navigation.state;
 
-  translateX = new Animated.Value(-width);
-  values = tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0));
+  const [translateX] = useState(new Animated.Value(-width));
+  const [values] = useState(
+    tabs.map((tab, index) => new Animated.Value(index === 0 ? 1 : 0))
+  );
 
   const slideBar = index => {
     Animated.sequence([
@@ -95,7 +98,11 @@ export default function Tabbar({ navigation }) {
   return (
     <Fragment>
       <View {...{ width, height }}>
-        <ActiveTab value={translateX} {...{ tabs, routes }} />
+        <ActiveTab
+          translateX={translateX}
+          values={values}
+          {...{ tabs, routes }}
+        />
         <AnimatedSvg
           width={width * 2.5}
           {...{ height }}
@@ -118,7 +125,10 @@ export default function Tabbar({ navigation }) {
               });
               return (
                 <TouchableWithoutFeedback
-                  onPress={() => slideBar(key)}
+                  onPress={() => {
+                    slideBar(key);
+                    navigation.navigate(routeName);
+                  }}
                   {...{ key }}
                 >
                   <Animated.View style={[styles.tab, { opacity }]}>
