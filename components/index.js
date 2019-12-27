@@ -1,3 +1,3 @@
-import AppContainer from "./bottomTabbar";
+import AppContainer from "./navigators/index";
 
 export default AppContainer;
