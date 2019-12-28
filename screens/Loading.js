@@ -1,17 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 
-export default function Home({ navigation }) {
+export default function Loading({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.textBackground}>
-        <Text style={styles.text}>Home</Text>
+        <Text style={styles.text}>Loading</Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Drawer"
+          title="Switch"
           color="green"
-          onPress={() => navigation.openDrawer()}
+          onPress={() => navigation.navigate("Home")}
         />
       </View>
     </View>

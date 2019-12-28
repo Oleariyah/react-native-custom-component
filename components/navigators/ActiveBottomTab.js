@@ -14,16 +14,6 @@ export default function ActiveTab(props) {
       {routes.map(({ routeName }, key) => {
         const activeValue = values[key];
 
-        const tabOpacity = translateX.interpolate({
-          inputRange: [
-            -width + tabWidth * (key - 1),
-            -width + tabWidth * key,
-            -width + tabWidth * (key + 1)
-          ],
-          outputRange: [0, 1, 0],
-          extrapolate: "clamp"
-        });
-
         const translateY = activeValue.interpolate({
           inputRange: [0, 1],
           outputRange: [tabHeight, 0]
@@ -42,8 +32,7 @@ export default function ActiveTab(props) {
                   justifyContent: "center",
                   alignItems: "center",
                   transform: [{ translateY }]
-                },
-                { tabOpacity }
+                }
               ]}
             >
               <View style={styles.circle}>

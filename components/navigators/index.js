@@ -5,7 +5,14 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
-import { Home, Dashboard, Detail, Profile, Settings } from "../../screens";
+import {
+  Loading,
+  Home,
+  Dashboard,
+  Detail,
+  Profile,
+  Settings
+} from "../../screens";
 import { Feather as Icons } from "@expo/vector-icons";
 
 const TabNavigator = createBottomTabNavigator(
@@ -27,7 +34,8 @@ const TabNavigator = createBottomTabNavigator(
     navigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index];
       return { headerTitle: routeName };
-    }
+    },
+    animatedEnable: true
   }
 );
 
@@ -55,7 +63,12 @@ const AppDrawerNavigator = createDrawerNavigator(
   }
 );
 
-export default AppContainer = createAppContainer(AppDrawerNavigator);
+const AppSwitchNavigator = createSwitchNavigator({
+  Loading: Loading,
+  Dashboard: AppDrawerNavigator
+});
+
+export default AppContainer = createAppContainer(AppSwitchNavigator);
 
 const styles = StyleSheet.create({
   container: {

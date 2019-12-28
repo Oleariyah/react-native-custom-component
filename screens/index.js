@@ -3,5 +3,6 @@ import Dashboard from "./Dashboard";
 import Detail from "./Detail";
 import Profile from "./Profile";
 import Settings from "./Settings";
+import Loading from "./Loading";
 
-export { Home, Dashboard, Detail, Profile, Settings };
+export { Loading, Home, Dashboard, Detail, Profile, Settings };
